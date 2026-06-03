@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大学人生时间轴 - 黑皮的大学人生岛</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a1a;
+            --bg-light: #1a1a3a;
+            --island-color: #f5e6d3;
+            --sea-color: #00a8cc;
+            --sea-dark: #007799;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            font-family: "Source Han Sans SC", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+            background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-light) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .ocean {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: -50%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 168, 204, 0.1) 50%, rgba(0, 168, 204, 0.2) 100%);
+            border-radius: 50% 50% 0 0;
+            animation: wave 15s ease-in-out infinite;
+        }
+
+        .wave:nth-child(2) {
+            bottom: 10%;
+            opacity: 0.6;
+            animation: wave 12s ease-in-out infinite;
+            animation-delay: -3s;
+        }
+
+        .wave:nth-child(3) {
+            bottom: 20%;
+            opacity: 0.4;
+            animation: wave 18s ease-in-out infinite;
+            animation-delay: -6s;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(5%) translateY(-10px); }
+            50% { transform: translateX(0) translateY(-20px); }
+            75% { transform: translateX(-5%) translateY(-10px); }
+        }
+
+        .header {
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--sea-color);
+            transform: translateX(-5px);
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            flex: 1;
+            margin-right: 120px;
+        }
+
+        .timeline-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            gap: 4rem;
+        }
+
+        .timeline-line {
+            position: relative;
+            width: 4px;
+            background: linear-gradient(180deg, var(--sea-color) 0%, rgba(0, 168, 204, 0.3) 100%);
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 16px;
+            background: var(--sea-color);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(0, 168, 204, 0.5);
+        }
+
+        .timeline-items {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .timeline-item {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-card:hover {
+            transform: translateX(10px);
+            border-color: var(--sea-color);
+            box-shadow: 0 10px 30px rgba(0, 168, 204, 0.2);
+        }
+
+        .timeline-card::before {
+            content: '';
+            position: absolute;
+            left: -38px;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            background: var(--sea-color);
+            border-radius: 50%;
+            border: 3px solid var(--bg-dark);
+        }
+
+        .timeline-card.completed::before {
+            background: #4caf50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+
+        .timeline-card.current::before {
+            background: var(--sea-color);
+            box-shadow: 0 0 15px rgba(0, 168, 204, 0.7);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .timeline-card.locked::before {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .card-year {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--sea-color);
+        }
+
+        .card-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        .card-status.completed {
+            background: rgba(76, 175, 80, 0.2);
+            color: #81c784;
+        }
+
+        .card-status.current {
+            background: rgba(0, 168, 204, 0.2);
+            color: var(--sea-color);
+        }
+
+        .card-status.locked {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .card-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .timeline-card:hover .card-details,
+        .timeline-card.expanded .card-details {
+            max-height: 300px;
+        }
+
+        .card-details ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .card-details li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .card-details li:last-child {
+            border-bottom: none;
+        }
+
+        .card-details li::before {
+            content: '▸';
+            color: var(--sea-color);
+        }
+
+        .expand-hint {
+            font-size: 0.8rem;
+            color: var(--sea-color);
+            margin-top: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .timeline-card:hover .expand-hint {
+            opacity: 1;
+        }
+
+        .future-note {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            background: rgba(0, 168, 204, 0.1);
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: var(--sea-color);
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                margin-right: 0;
+            }
+
+            .timeline-container {
+                flex-direction: column;
+                gap: 2rem;
+                padding: 1rem;
+            }
+
+            .timeline-line {
+                position: absolute;
+                left: 2rem;
+                width: 4px;
+                height: 100%;
+            }
+
+            .timeline-items {
+                padding-left: 4rem;
+            }
+
+            .timeline-card::before {
+                left: -2.5rem;
+            }
+
+            .timeline-card:hover {
+                transform: translateY(-5px);
+            }
+
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ocean">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
+    <header class="header">
+        <a href="index.html" class="back-btn">
+            <span>←</span>
+            <span>返回岛屿</span>
+        </a>
+        <h1 class="page-title">大学人生时间轴</h1>
+    </header>
+
+    <main class="timeline-container">
+        <div class="timeline-line"></div>
+        <div class="timeline-items">
+            <div class="timeline-item">
+                <div class="timeline-card completed">
+                    <div class="card-header">
+                        <span class="card-year">2026</span>
+                        <span class="card-status completed">
+                            <span>✓</span>
+                            <span>大一进行中</span>
+                        </span>
+                    </div>
+                    <div class="card-title">大一 - 启航年</div>
+                    <div class="card-subtitle">金门大学资讯工程系 · 30岁重新出发</div>
+                    <div class="card-details">
+                        <ul>
+                            <li>进入金门大学资讯工程系</li>
+                            <li>30岁重考大学，毅然抉择</li>
+                            <li>目标：3+1 硕士计划</li>
+                            <li>建立编程基础能力</li>
+                        </ul>
+                    </div>
+                    <div class="expand-hint">悬停查看详情</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-card locked">
+                    <div class="card-header">
+                        <span class="card-year">2027</span>
+                        <span class="card-status locked">
+                            <span>🔒</span>
+                            <span>大二</span>
+                        </span>
+                    </div>
+                    <div class="card-title">大二 - 奠基年</div>
+                    <div class="card-subtitle">深化专业知识</div>
+                    <div class="card-details">
+                        <ul>
+                            <li>深入数据结构与算法</li>
+                            <li>选修进阶课程</li>
+                            <li>参与项目实践</li>
+                        </ul>
+                    </div>
+                    <div class="expand-hint">悬停查看详情</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-card locked">
+                    <div class="card-header">
+                        <span class="card-year">2028</span>
+                        <span class="card-status locked">
+                            <span>🔒</span>
+                            <span>大三</span>
+                        </span>
+                    </div>
+                    <div class="card-title">大三 - 突破年</div>
+                    <div class="card-subtitle">专业方向探索</div>
+                    <div class="card-details">
+                        <ul>
+                            <li>确定专业方向</li>
+                            <li>参与专题研究</li>
+                            <li>累积项目经验</li>
+                        </ul>
+                    </div>
+                    <div class="expand-hint">悬停查看详情</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-card locked">
+                    <div class="card-header">
+                        <span class="card-year">2029</span>
+                        <span class="card-status locked">
+                            <span>🔒</span>
+                            <span>大四</span>
+                        </span>
+                    </div>
+                    <div class="card-title">大四 - 收获年</div>
+                    <div class="card-subtitle">毕业前最后冲刺</div>
+                    <div class="card-details">
+                        <ul>
+                            <li>完成毕业专题</li>
+                            <li>准备研究所考试</li>
+                            <li>就业或深造规划</li>
+                        </ul>
+                    </div>
+                    <div class="expand-hint">悬停查看详情</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-card locked">
+                    <div class="card-header">
+                        <span class="card-year">2030+</span>
+                        <span class="card-status locked">
+                            <span>🔒</span>
+                            <span>研究所/博士</span>
+                        </span>
+                    </div>
+                    <div class="card-title">研究所 - 深化年</div>
+                    <div class="card-subtitle">迈向3+1硕士目标</div>
+                    <div class="card-details">
+                        <ul>
+                            <li>攻读硕士学位</li>
+                            <li>深入研究领域</li>
+                            <li>发表学术论文</li>
+                            <li>未来可延伸至博士</li>
+                        </ul>
+                    </div>
+                    <div class="future-note">🌊 未来的路，由你来书写</div>
+                    <div class="expand-hint">悬停查看详情</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2026 黑皮 · 航行中</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const items = document.querySelectorAll('.timeline-item');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.classList.add('visible');
+                        }, index * 150);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            items.forEach(item => observer.observe(item));
+
+            document.querySelectorAll('.timeline-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    this.classList.toggle('expanded');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
