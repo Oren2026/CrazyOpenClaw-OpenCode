@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>技能树 - 黑皮的大学人生岛</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a1a;
+            --bg-light: #1a1a3a;
+            --island-color: #f5e6d3;
+            --sea-color: #00a8cc;
+            --sea-dark: #007799;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --star-active: #ffd700;
+            --star-inactive: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            font-family: "Source Han Sans SC", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+            background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-light) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .ocean {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: -50%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 168, 204, 0.1) 50%, rgba(0, 168, 204, 0.2) 100%);
+            border-radius: 50% 50% 0 0;
+            animation: wave 15s ease-in-out infinite;
+        }
+
+        .wave:nth-child(2) {
+            bottom: 10%;
+            opacity: 0.6;
+            animation: wave 12s ease-in-out infinite;
+            animation-delay: -3s;
+        }
+
+        .wave:nth-child(3) {
+            bottom: 20%;
+            opacity: 0.4;
+            animation: wave 18s ease-in-out infinite;
+            animation-delay: -6s;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(5%) translateY(-10px); }
+            50% { transform: translateX(0) translateY(-20px); }
+            75% { transform: translateX(-5%) translateY(-10px); }
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0.6rem 1.2rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: var(--sea-color);
+            border-color: var(--sea-color);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .tree-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .category {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem 2rem;
+        }
+
+        .category-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .category-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 24px;
+            background: var(--sea-color);
+            border-radius: 2px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .skill-node {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .skill-node:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--sea-color);
+            transform: translateY(-2px);
+        }
+
+        .skill-name {
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .skill-stars {
+            display: flex;
+            gap: 2px;
+            font-size: 0.9rem;
+        }
+
+        .star {
+            color: var(--star-inactive);
+            transition: color 0.3s ease;
+        }
+
+        .star.lit {
+            color: var(--star-active);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .pending-section {
+            margin-top: 1rem;
+        }
+
+        .pending-title {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .pending-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .pending-tag {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            .back-btn {
+                position: static;
+                transform: none;
+                margin-bottom: 1.5rem;
+                display: inline-block;
+            }
+
+            .header {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .category {
+                padding: 1.25rem;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ocean">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <a href="index.html" class="back-btn">← 返回岛屿</a>
+            <h1 class="page-title">🌲 技能树</h1>
+            <p class="page-subtitle">知识与能力的积累</p>
+        </div>
+
+        <div class="tree-container">
+            <div class="category">
+                <div class="category-title">💻 编程</div>
+                <div class="skills-grid">
+                    <div class="skill-node">
+                        <span class="skill-name">Python</span>
+                        <div class="skill-stars">
+                            <span class="star lit">⭐</span>
+                            <span class="star lit">⭐</span>
+                            <span class="star lit">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                        </div>
+                    </div>
+                    <div class="skill-node">
+                        <span class="skill-name">C</span>
+                        <div class="skill-stars">
+                            <span class="star lit">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                        </div>
+                    </div>
+                    <div class="skill-node">
+                        <span class="skill-name">JS</span>
+                        <div class="skill-stars">
+                            <span class="star lit">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-title">🤖 AI</div>
+                <div class="skills-grid">
+                    <div class="skill-node">
+                        <span class="skill-name">基礎</span>
+                        <div class="skill-stars">
+                            <span class="star lit">⭐</span>
+                            <span class="star lit">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                        </div>
+                    </div>
+                    <div class="skill-node">
+                        <span class="skill-name">LLM</span>
+                        <div class="skill-stars">
+                            <span class="star lit">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-title">🧠 思维</div>
+                <div class="skills-grid">
+                    <div class="skill-node">
+                        <span class="skill-name">系统思考</span>
+                        <div class="skill-stars">
+                            <span class="star lit">⭐</span>
+                            <span class="star lit">⭐</span>
+                            <span class="star lit">⭐</span>
+                            <span class="star lit">⭐</span>
+                            <span class="star lit">⭐</span>
+                        </div>
+                    </div>
+                    <div class="skill-node">
+                        <span class="skill-name">深度思考</span>
+                        <div class="skill-stars">
+                            <span class="star lit">⭐</span>
+                            <span class="star lit">⭐</span>
+                            <span class="star lit">⭐</span>
+                            <span class="star lit">⭐</span>
+                            <span class="star lit">⭐</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-title">📚 待学习</div>
+                <div class="pending-section">
+                    <div class="pending-grid">
+                        <span class="pending-tag">🔒 ROS</span>
+                        <span class="pending-tag">🔒 焊接</span>
+                        <span class="pending-tag">🔒 电子</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
