@@ -392,36 +392,36 @@
     <section class="nav-section" id="nav-section">
         <h2 class="section-title">岛屿地图</h2>
         <div class="nav-grid">
-            <div class="nav-card" onclick="showMessage('时间轴')">
+            <a href="timeline.html" class="nav-card">
                 <div class="nav-icon">⏱</div>
                 <div class="nav-title">时间轴</div>
                 <div class="nav-desc">大学四年的成长历程</div>
-            </div>
-            <div class="nav-card" onclick="showMessage('成就徽章墙')">
+            </a>
+            <a href="badges.html" class="nav-card">
                 <div class="nav-icon">🏆</div>
                 <div class="nav-title">成就徽章墙</div>
                 <div class="nav-desc">每一次突破的见证</div>
-            </div>
-            <div class="nav-card" onclick="showMessage('技能树')">
+            </a>
+            <a href="skills.html" class="nav-card">
                 <div class="nav-icon">🌲</div>
                 <div class="nav-title">技能树</div>
                 <div class="nav-desc">知识与能力的积累</div>
-            </div>
-            <div class="nav-card" onclick="showMessage('回忆胶囊')">
+            </a>
+            <a href="capsules.html" class="nav-card">
                 <div class="nav-icon">💌</div>
                 <div class="nav-title">回忆胶囊</div>
                 <div class="nav-desc">珍藏每一刻美好</div>
-            </div>
-            <div class="nav-card" onclick="showMessage('留言板')">
+            </a>
+            <a href="messages.html" class="nav-card">
                 <div class="nav-icon">💬</div>
                 <div class="nav-title">留言板</div>
                 <div class="nav-desc">留下你的足迹</div>
-            </div>
-            <div class="nav-card" onclick="showMessage('关于')">
+            </a>
+            <a href="about.html" class="nav-card">
                 <div class="nav-icon">ℹ️</div>
                 <div class="nav-title">关于</div>
                 <div class="nav-desc">岛屿主人的故事</div>
-            </div>
+            </a>
         </div>
     </section>
 
@@ -464,9 +464,6 @@
             document.getElementById('nav-section').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function showMessage(section) {
-            alert(section + ' — 正在开发中，敬请期待！');
-        }
-    </script>
+        </script>
 </body>
 </html>
