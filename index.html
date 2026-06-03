@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>黑皮的大学人生岛</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a1a;
+            --bg-light: #1a1a3a;
+            --island-color: #f5e6d3;
+            --sea-color: #00a8cc;
+            --sea-dark: #007799;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            font-family: "Source Han Sans SC", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+            background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-light) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* Ocean Waves Background */
+        .ocean {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: -50%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 168, 204, 0.1) 50%, rgba(0, 168, 204, 0.2) 100%);
+            border-radius: 50% 50% 0 0;
+            animation: wave 15s ease-in-out infinite;
+        }
+
+        .wave:nth-child(2) {
+            bottom: 10%;
+            opacity: 0.6;
+            animation: wave 12s ease-in-out infinite;
+            animation-delay: -3s;
+        }
+
+        .wave:nth-child(3) {
+            bottom: 20%;
+            opacity: 0.4;
+            animation: wave 18s ease-in-out infinite;
+            animation-delay: -6s;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(5%) translateY(-10px); }
+            50% { transform: translateX(0) translateY(-20px); }
+            75% { transform: translateX(-5%) translateY(-10px); }
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .island-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin-bottom: 3rem;
+            perspective: 1000px;
+        }
+
+        .island {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #f5e6d3 0%, #e8d4b8 50%, #d4c4a8 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: float 6s ease-in-out infinite;
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.4),
+                inset 0 -20px 40px rgba(0, 0, 0, 0.1),
+                inset 0 20px 40px rgba(255, 255, 255, 0.3);
+        }
+
+        .island::before {
+            content: '';
+            position: absolute;
+            top: 15%;
+            left: 20%;
+            width: 30%;
+            height: 25%;
+            background: radial-gradient(ellipse, rgba(139, 90, 43, 0.6) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .island::after {
+            content: '';
+            position: absolute;
+            top: 25%;
+            right: 25%;
+            width: 20%;
+            height: 20%;
+            background: radial-gradient(ellipse, rgba(76, 175, 80, 0.7) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .island-trees {
+            position: absolute;
+            top: 20%;
+            left: 35%;
+            width: 40%;
+            height: 40%;
+        }
+
+        .tree {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 20px solid #2e7d32;
+        }
+
+        .tree::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: -8px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 22px solid #388e3c;
+        }
+
+        .tree:nth-child(1) { left: 20%; top: 0; transform: scale(1.2); }
+        .tree:nth-child(2) { left: 50%; top: 10px; transform: scale(0.9); }
+        .tree:nth-child(3) { left: 70%; top: 5px; transform: scale(1); }
+
+        @keyframes float {
+            0%, 100% { transform: rotateX(10deg) rotateY(0deg) translateY(0); }
+            50% { transform: rotateX(10deg) rotateY(5deg) translateY(-15px); }
+        }
+
+        .hero-title {
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            letter-spacing: 0.1em;
+        }
+
+        .hero-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .cta-button {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--bg-dark);
+            background: linear-gradient(135deg, #f5e6d3 0%, #e8d4b8 100%);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(245, 230, 211, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(245, 230, 211, 0.4);
+        }
+
+        /* Navigation Section */
+        .nav-section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .nav-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--sea-color), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--sea-color);
+            box-shadow: 0 20px 40px rgba(0, 168, 204, 0.2);
+        }
+
+        .nav-card:hover::before {
+            opacity: 1;
+        }
+
+        .nav-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .nav-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Island Status */
+        .status-section {
+            padding: 3rem 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .status-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            min-width: 100px;
+        }
+
+        .status-value {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .status-tag {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: rgba(0, 168, 204, 0.2);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .status-tag.locked {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: var(--sea-color);
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .footer a:hover {
+            opacity: 0.8;
+        }
+
+        .footer-links {
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .island-container {
+                width: 200px;
+                height: 200px;
+            }
+
+            .hero-title {
+                font-size: 1.5rem;
+            }
+
+            .nav-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ocean">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
+    <section class="hero">
+        <div class="island-container">
+            <div class="island">
+                <div class="island-trees">
+                    <div class="tree"></div>
+                    <div class="tree"></div>
+                    <div class="tree"></div>
+                </div>
+            </div>
+        </div>
+        <h1 class="hero-title">黑皮的大学人生岛</h1>
+        <p class="hero-subtitle">1996 · 金门大学资讯工程系 · 追寻本质的深行者</p>
+        <button class="cta-button" onclick="scrollToNav()">登岛探索</button>
+    </section>
+
+    <section class="nav-section" id="nav-section">
+        <h2 class="section-title">岛屿地图</h2>
+        <div class="nav-grid">
+            <div class="nav-card" onclick="showMessage('时间轴')">
+                <div class="nav-icon">⏱</div>
+                <div class="nav-title">时间轴</div>
+                <div class="nav-desc">大学四年的成长历程</div>
+            </div>
+            <div class="nav-card" onclick="showMessage('成就徽章墙')">
+                <div class="nav-icon">🏆</div>
+                <div class="nav-title">成就徽章墙</div>
+                <div class="nav-desc">每一次突破的见证</div>
+            </div>
+            <div class="nav-card" onclick="showMessage('技能树')">
+                <div class="nav-icon">🌲</div>
+                <div class="nav-title">技能树</div>
+                <div class="nav-desc">知识与能力的积累</div>
+            </div>
+            <div class="nav-card" onclick="showMessage('回忆胶囊')">
+                <div class="nav-icon">💌</div>
+                <div class="nav-title">回忆胶囊</div>
+                <div class="nav-desc">珍藏每一刻美好</div>
+            </div>
+            <div class="nav-card" onclick="showMessage('留言板')">
+                <div class="nav-icon">💬</div>
+                <div class="nav-title">留言板</div>
+                <div class="nav-desc">留下你的足迹</div>
+            </div>
+            <div class="nav-card" onclick="showMessage('关于')">
+                <div class="nav-icon">ℹ️</div>
+                <div class="nav-title">关于</div>
+                <div class="nav-desc">岛屿主人的故事</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="status-section">
+        <h2 class="section-title">岛屿状态</h2>
+        <div class="status-card">
+            <div class="status-item">
+                <span class="status-label">航行状态</span>
+                <span class="status-value">启航中 <span class="status-tag">大一下</span></span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">已探索</span>
+                <span class="status-value">
+                    <span class="status-tag">编程入门</span>
+                    <span class="status-tag">AI基础</span>
+                </span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">未解锁</span>
+                <span class="status-value">
+                    <span class="status-tag locked">时间轴</span>
+                    <span class="status-tag locked">成就徽章墙</span>
+                    <span class="status-tag locked">技能树</span>
+                    <span class="status-tag locked">回忆胶囊</span>
+                    <span class="status-tag locked">留言板</span>
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+        </div>
+        <p>© 2026 黑皮 · 航行中</p>
+    </footer>
+
+    <script>
+        function scrollToNav() {
+            document.getElementById('nav-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showMessage(section) {
+            alert(section + ' — 正在开发中，敬请期待！');
+        }
+    </script>
+</body>
+</html>
