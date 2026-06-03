@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人生行事曆 - 黑皮的大學人生島</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a1a;
+            --bg-light: #1a1a3a;
+            --sea-color: #00a8cc;
+            --sea-dark: #007799;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --category-competition: #42a5f5;
+            --category-school: #66bb6a;
+            --category-future: #ffca28;
+            --category-personal: #ab47bc;
+        }
+
+        body {
+            font-family: "Source Han Sans SC", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+            background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-light) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .ocean {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: -50%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 168, 204, 0.1) 50%, rgba(0, 168, 204, 0.2) 100%);
+            border-radius: 50% 50% 0 0;
+            animation: wave 15s ease-in-out infinite;
+        }
+
+        .wave:nth-child(2) {
+            bottom: 10%;
+            opacity: 0.6;
+            animation: wave 12s ease-in-out infinite;
+            animation-delay: -3s;
+        }
+
+        .wave:nth-child(3) {
+            bottom: 20%;
+            opacity: 0.4;
+            animation: wave 18s ease-in-out infinite;
+            animation-delay: -6s;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(5%) translateY(-10px); }
+            50% { transform: translateX(0) translateY(-20px); }
+            75% { transform: translateX(-5%) translateY(-10px); }
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            border-color: var(--sea-color);
+            box-shadow: 0 5px 20px rgba(0, 168, 204, 0.3);
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .add-btn {
+            padding: 0.6rem 1.2rem;
+            background: rgba(0, 168, 204, 0.2);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--sea-color);
+            border-radius: 12px;
+            color: var(--sea-color);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-btn:hover {
+            background: var(--sea-color);
+            color: var(--bg-dark);
+        }
+
+        .month-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            padding: 0.5rem 0;
+            scrollbar-width: none;
+        }
+
+        .month-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--sea-color);
+            box-shadow: 0 5px 15px rgba(0, 168, 204, 0.3);
+        }
+
+        .current-month {
+            font-size: 1.3rem;
+            font-weight: 600;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            justify-content: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .events-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+        }
+
+        .events-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .event-card {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        .event-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .event-card.competition { border-left-color: var(--category-competition); }
+        .event-card.school { border-left-color: var(--category-school); }
+        .event-card.future { border-left-color: var(--category-future); }
+        .event-card.personal { border-left-color: var(--category-personal); }
+
+        .event-time {
+            min-width: 80px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .event-content {
+            flex: 1;
+        }
+
+        .event-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .event-tag {
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .event-tag.competition { background: rgba(66, 165, 245, 0.2); color: var(--category-competition); }
+        .event-tag.school { background: rgba(102, 187, 106, 0.2); color: var(--category-school); }
+        .event-tag.future { background: rgba(255, 202, 40, 0.2); color: var(--category-future); }
+        .event-tag.personal { background: rgba(171, 71, 188, 0.2); color: var(--category-personal); }
+
+        .event-people {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .person-tag {
+            padding: 0.25rem 0.6rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-left {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .event-card {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .event-time {
+                font-size: 0.8rem;
+            }
+
+            .legend {
+                gap: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ocean">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <a href="index.html" class="back-btn">
+                    <span>←</span>
+                    <span>返回首頁</span>
+                </a>
+                <h1 class="page-title">📅 人生行事曆</h1>
+            </div>
+            <button class="add-btn" onclick="alert('功能預留中')">＋ 新增事件</button>
+        </div>
+
+        <div class="month-nav">
+            <button class="nav-btn" onclick="changeMonth(-1)">‹</button>
+            <span class="current-month" id="currentMonth"></span>
+            <button class="nav-btn" onclick="changeMonth(1)">›</button>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-dot" style="background: var(--category-competition);"></div>
+                <span>🟦 比賽</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: var(--category-school);"></div>
+                <span>🟩 學校</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: var(--category-future);"></div>
+                <span>🟨 未來規劃</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: var(--category-personal);"></div>
+                <span>🟪 個人</span>
+            </div>
+        </div>
+
+        <div class="events-container">
+            <div class="events-list" id="eventsList"></div>
+        </div>
+    </div>
+
+    <script>
+        const events = [
+            {
+                date: '2026-04-15',
+                dateDisplay: '4/15 (三)',
+                title: '金門大學期中考',
+                category: 'school',
+                people: ['王教授', '資工系同學']
+            },
+            {
+                date: '2026-04-20',
+                dateDisplay: '4/20 (一)',
+                title: '系學會開會',
+                category: 'school',
+                people: ['會長', '幹部群']
+            },
+            {
+                date: '2026-06-10',
+                dateDisplay: '6/10 (三)',
+                title: '期末考 - 線性代數',
+                category: 'school',
+                people: ['李教授']
+            },
+            {
+                date: '2026-06-15',
+                dateDisplay: '6/15 (一)',
+                title: '期末考 - 計算機結構',
+                category: 'school',
+                people: ['陳教授']
+            },
+            {
+                date: '2026-07-01',
+                dateDisplay: '7/1 (二)',
+                title: 'TDK暑期集訓開始',
+                category: 'competition',
+                people: ['TDK隊友', '學長']
+            },
+            {
+                date: '2026-07-15',
+                dateDisplay: '7/15 (二)',
+                title: 'TB3機器人調整',
+                category: 'competition',
+                people: ['指導老師']
+            },
+            {
+                date: '2026-08-01',
+                dateDisplay: '8/1 (六)',
+                title: '暑期目標：學會React',
+                category: 'future',
+                people: []
+            },
+            {
+                date: '2026-08-10',
+                dateDisplay: '8/10 (一)',
+                title: '金門三天兩夜小旅行',
+                category: 'personal',
+                people: ['高中同學']
+            }
+        ];
+
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+
+        const monthNames = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+        const categoryNames = { competition: '🟦 比賽', school: '🟩 學校', future: '🟨 未來規劃', personal: '🟪 個人' };
+
+        function changeMonth(delta) {
+            currentMonth += delta;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            } else if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderEvents();
+        }
+
+        function renderEvents() {
+            document.getElementById('currentMonth').textContent = `${currentYear}年 ${monthNames[currentMonth]}`;
+
+            const filteredEvents = events.filter(event => {
+                const eventDate = new Date(event.date);
+                return eventDate.getMonth() === currentMonth && eventDate.getFullYear() === currentYear;
+            });
+
+            const eventsList = document.getElementById('eventsList');
+
+            if (filteredEvents.length === 0) {
+                eventsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <p>這個月沒有事件</p>
+                    </div>
+                `;
+                return;
+            }
+
+            eventsList.innerHTML = filteredEvents.map(event => `
+                <div class="event-card ${event.category}">
+                    <div class="event-time">${event.dateDisplay}</div>
+                    <div class="event-content">
+                        <div class="event-title">${event.title}</div>
+                        <div class="event-meta">
+                            <span class="event-tag ${event.category}">${categoryNames[event.category]}</span>
+                            ${event.people.length > 0 ? `<div class="event-people">${event.people.map(p => `<span class="person-tag">${p}</span>`).join('')}</div>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        renderEvents();
+    </script>
+</body>
+</html>
