@@ -3,123 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oren x OpenCode 协作框架</title>
+    <title>Oren × OpenCode</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-card: rgba(255, 255, 255, 0.05);
+            --border-card: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --accent: #00d4ff;
+            --accent-gradient: linear-gradient(135deg, #00d4ff 0%, #a855f7 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0d1117;
-            color: #c9d1d9;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             min-height: 100vh;
-            padding: 2rem;
             line-height: 1.6;
         }
-        .container { max-width: 800px; margin: 0 auto; }
-        h1, h2 { color: #58a6ff; margin: 1.5rem 0 1rem; }
-        h1 { font-size: 2rem; border-bottom: 1px solid #30363d; padding-bottom: 1rem; }
-        .box {
-            background: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin: 1rem 0;
+
+        /* Animated gradient background */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
+                var(--bg-primary);
+            z-index: -1;
+            animation: gradientShift 20s ease infinite;
         }
-        .chain {
+
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4rem 1.5rem;
+        }
+
+        /* Hero section */
+        .hero {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Glass card */
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+        }
+
+        /* Cards grid */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--accent-gradient);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 1rem;
-            margin: 1rem 0;
-            flex-wrap: wrap;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
         }
-        .node {
-            background: #238636;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
+
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
         }
-        .node.oрен { background: #1f6feb; }
-        .node.opencode { background: #8957e5; }
-        .arrow { font-size: 1.5rem; color: #8b949e; }
-        code {
-            background: #262c36;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.9rem;
+
+        .card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
         }
-        pre {
-            background: #262c36;
-            padding: 1rem;
-            border-radius: 8px;
-            overflow-x: auto;
-            font-size: 0.85rem;
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-card);
+            color: var(--text-secondary);
+            font-size: 0.875rem;
         }
-        .role { color: #f0883e; }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Status badge */
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            margin-top: 1rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #00ff88;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 640px) {
+            .container {
+                padding: 2rem 1rem;
+            }
+            
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="bg-gradient"></div>
+    
     <div class="container">
-        <h1>🐟 Oren x OpenCode 协作框架</h1>
-        
-        <div class="box">
-            <h2>协作流程</h2>
-            <div class="chain">
-                <span class="node oren">黑皮 → Oren</span>
-                <span class="arrow">→</span>
-                <span class="node oren">Oren 分析</span>
-                <span class="arrow">→</span>
-                <span class="node opencode">OpenCode 执行</span>
-                <span class="arrow">→</span>
-                <span class="node oren">Push Git</span>
+        <section class="hero">
+            <h1>Oren × OpenCode</h1>
+            <p>AI Coding Agent 协作框架 · 系统架构原型</p>
+            <div class="status">
+                <span class="status-dot"></span>
+                <span>System Online</span>
             </div>
-        </div>
+        </section>
 
-        <div class="box">
-            <h2>OpenCode 角色设定</h2>
-            <p>你是 <span class="role">OpenCode Coding Agent</span></p>
-            <br>
-            <p>你的任务是根据 Oren 的指令编写代码，并确保代码质量和可运行性。</p>
-        </div>
+        <section class="cards">
+            <article class="card">
+                <div class="card-icon">🧠</div>
+                <h3>Oren 协调者</h3>
+                <p>分析需求、生成指令、质量把控</p>
+            </article>
 
-        <div class="box">
-            <h2>Prompt 模板（Oren 给的指令）</h2>
-            <pre><code>## 任务
-[描述需求]
+            <article class="card">
+                <div class="card-icon">⚡</div>
+                <h3>OpenCode 执行</h3>
+                <p>代码生成、可视化预览、自动部署</p>
+            </article>
 
-## 约束
-- [技术约束/限制]
+            <article class="card">
+                <div class="card-icon">🔗</div>
+                <h3>GitHub 集成</h3>
+                <p>版本控制、协作、可追溯</p>
+            </article>
+        </section>
 
-## 产出
-- [期望的文件和功能]
-
-## 验证
-- [怎么确认做完了]</code></pre>
-        </div>
-
-        <div class="box">
-            <h2>示例 Prompt</h2>
-            <pre><code>## 任务
-在 index.html 加入一个按钮，点击显示当前时间
-
-## 约束
-- 使用原生 JavaScript（不加载库）
-- 按钮样式: 蓝色背景、白色文字、圆角
-
-## 产出
-- 修改 index.html，加入按钮和 JS 代码
-
-## 验证
-- 刷新页面后，按钮可见
-- 点击按钮显示时间（如 "13:45:00"）</code></pre>
-        </div>
-
-        <div class="box">
-            <h2>下一步</h2>
-            <p>1. ✅ 创建 OpenCode 的 <a href="role.md">role.md</a> — 定义更详细的身份</p>
-            <p>2. ✅ Task Templates — 常用任务模板</p>
-            <p>3. 下一个：自动化 workflow</p>
-        </div>
+        <footer>
+            <p>Built by <a href="#">Oren + OpenCode</a> · System v1.0</p>
+            <p style="margin-top: 0.5rem;">© 2026</p>
+        </footer>
     </div>
 </body>
 </html>
