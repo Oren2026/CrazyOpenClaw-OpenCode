@@ -1,50 +1,125 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CrazyOpenClaw - OpenCode</title>
+    <title>Oren x OpenCode 协作框架</title>
     <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            margin: 0;
-            padding: 0;
+            background: #0d1117;
+            color: #c9d1d9;
             min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1, h2 { color: #58a6ff; margin: 1.5rem 0 1rem; }
+        h1 { font-size: 2rem; border-bottom: 1px solid #30363d; padding-bottom: 1rem; }
+        .box {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+        .chain {
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+        .node {
+            background: #238636;
             color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
         }
-        .container {
-            text-align: center;
-            padding: 2rem;
+        .node.oрен { background: #1f6feb; }
+        .node.opencode { background: #8957e5; }
+        .arrow { font-size: 1.5rem; color: #8b949e; }
+        code {
+            background: #262c36;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
         }
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(90deg, #00d9ff, #00ff88);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        pre {
+            background: #262c36;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.85rem;
         }
-        p {
-            font-size: 1.2rem;
-            opacity: 0.8;
-        }
-        .status {
-            margin-top: 2rem;
-            padding: 0.5rem 1rem;
-            background: rgba(0, 217, 255, 0.2);
-            border-radius: 20px;
-            display: inline-block;
-        }
+        .role { color: #f0883e; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🦴 CrazyOpenClaw</h1>
-        <p>OpenCode Agent Playground</p>
-        <div class="status">🟢 Running</div>
+        <h1>🐟 Oren x OpenCode 协作框架</h1>
+        
+        <div class="box">
+            <h2>协作流程</h2>
+            <div class="chain">
+                <span class="node oren">黑皮 → Oren</span>
+                <span class="arrow">→</span>
+                <span class="node oren">Oren 分析</span>
+                <span class="arrow">→</span>
+                <span class="node opencode">OpenCode 执行</span>
+                <span class="arrow">→</span>
+                <span class="node oren">Push Git</span>
+            </div>
+        </div>
+
+        <div class="box">
+            <h2>OpenCode 角色设定</h2>
+            <p>你是 <span class="role">OpenCode Coding Agent</span></p>
+            <br>
+            <p>你的任务是根据 Oren 的指令编写代码，并确保代码质量和可运行性。</p>
+        </div>
+
+        <div class="box">
+            <h2>Prompt 模板（Oren 给的指令）</h2>
+            <pre><code>## 任务
+[描述需求]
+
+## 约束
+- [技术约束/限制]
+
+## 产出
+- [期望的文件和功能]
+
+## 验证
+- [怎么确认做完了]</code></pre>
+        </div>
+
+        <div class="box">
+            <h2>示例 Prompt</h2>
+            <pre><code>## 任务
+在 index.html 加入一个按钮，点击显示当前时间
+
+## 约束
+- 使用原生 JavaScript（不加载库）
+- 按钮样式: 蓝色背景、白色文字、圆角
+
+## 产出
+- 修改 index.html，加入按钮和 JS 代码
+
+## 验证
+- 刷新页面后，按钮可见
+- 点击按钮显示时间（如 "13:45:00"）</code></pre>
+        </div>
+
+        <div class="box">
+            <h2>下一步</h2>
+            <p>1. 创建 OpenCode 的 role.md → 定义更详细的身份</p>
+            <p>2. 建立 task templates → 常用任务模板</p>
+            <p>3. 自动化 workflow → Oren → OpenCode 自动push</p>
+        </div>
     </div>
 </body>
 </html>
