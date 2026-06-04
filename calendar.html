@@ -193,6 +193,72 @@
             overflow-x: auto;
         }
 
+        .main-content {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .calendar-wrapper {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .pending-sidebar {
+            width: 250px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1rem;
+            flex-shrink: 0;
+        }
+
+        .pending-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pending-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .pending-item {
+            font-size: 0.8rem;
+            padding: 0.5rem;
+            background: rgba(255, 202, 40, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid var(--category-future);
+        }
+
+        .pending-item .date {
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .pending-item .event-name {
+            color: var(--text-primary);
+        }
+
+        .pending-item .note {
+            color: var(--category-future);
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        .pending-empty {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-align: center;
+            padding: 1rem 0;
+        }
+
         .weekday-header {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -282,6 +348,16 @@
             padding: 2px 6px;
         }
 
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column-reverse;
+            }
+
+            .pending-sidebar {
+                width: 100%;
+            }
+        }
+
         @media (max-width: 600px) {
             .header {
                 flex-direction: column;
@@ -355,22 +431,35 @@
             </div>
         </div>
 
-        <div class="calendar-container">
-            <div class="weekday-header">
-                <div class="weekday">一</div>
-                <div class="weekday">二</div>
-                <div class="weekday">三</div>
-                <div class="weekday">四</div>
-                <div class="weekday">五</div>
-                <div class="weekday">六</div>
-                <div class="weekday">日</div>
+        <div class="main-content">
+            <div class="calendar-wrapper">
+                <div class="calendar-container">
+                    <div class="weekday-header">
+                        <div class="weekday">一</div>
+                        <div class="weekday">二</div>
+                        <div class="weekday">三</div>
+                        <div class="weekday">四</div>
+                        <div class="weekday">五</div>
+                        <div class="weekday">六</div>
+                        <div class="weekday">日</div>
+                    </div>
+                    <div class="calendar-grid" id="calendarGrid"></div>
+                </div>
             </div>
-            <div class="calendar-grid" id="calendarGrid"></div>
+            <div class="pending-sidebar">
+                <div class="pending-title">⏳ 待確認事項</div>
+                <div class="pending-list" id="pendingList"></div>
+            </div>
         </div>
     </div>
 
     <script>
-        const events = [];
+        const events = [
+            { title: '成都旅行', category: 'personal', people: '妈妈', note: '已确认', startDate: '2026-06-13', endDate: '2026-06-18' },
+            { title: '厦门旅行', category: 'personal', people: '室友', note: '已确认', startDate: '2026-06-18', endDate: '2026-06-19' },
+            { title: '系学会聚餐', category: 'school', people: '系学会成员', note: '晚上，时间待确认', startDate: '2026-06-? ?', endDate: null },
+            { title: '支教活动', category: 'competition', people: '待确认', note: '时间待确认', startDate: '2026-07-?', endDate: null }
+        ];
 
         let currentDate = new Date();
         let currentMonth = currentDate.getMonth();
@@ -419,7 +508,8 @@
                 }
 
                 const dayEvents = events.filter(e => {
-                    const d = new Date(e.date);
+                    if (!e.endDate && e.startDate.includes('?')) return false;
+                    const d = new Date(e.startDate);
                     return d.getDate() === day && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
                 });
 
@@ -432,8 +522,11 @@
                 `;
 
                 dayEl.onclick = () => {
-                    const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                    const dayEventsList = events.filter(e => e.date === dateStr);
+                    const dayEventsList = events.filter(e => {
+                        if (!e.endDate && e.startDate.includes('?')) return false;
+                        const d = new Date(e.startDate);
+                        return d.getDate() === day && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+                    });
                     if (dayEventsList.length > 0) {
                         alert(`日期: ${day}\n事件: ${dayEventsList.map(e => e.title).join('\n')}\n\n功能預留中`);
                     } else {
@@ -450,6 +543,26 @@
                 emptyDay.className = 'calendar-day empty';
                 grid.appendChild(emptyDay);
             }
+
+            renderPendingList();
+        }
+
+        function renderPendingList() {
+            const pendingList = document.getElementById('pendingList');
+            const pendingEvents = events.filter(e => e.startDate.includes('?') || e.note.includes('待确认'));
+
+            if (pendingEvents.length === 0) {
+                pendingList.innerHTML = '<div class="pending-empty">暫無待確認事項</div>';
+                return;
+            }
+
+            pendingList.innerHTML = pendingEvents.map(e => `
+                <div class="pending-item">
+                    <div class="date">${e.startDate}</div>
+                    <div class="event-name">${e.title}</div>
+                    <div class="note">⏳ 待確認</div>
+                </div>
+            `).join('');
         }
 
         renderCalendar();
