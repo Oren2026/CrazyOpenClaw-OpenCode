@@ -3,569 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>人生行事曆 - 黑皮的大學人生島</title>
+    <title>行事曆</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg-dark: #0a0a1a;
-            --bg-light: #1a1a3a;
-            --sea-color: #00a8cc;
-            --sea-dark: #007799;
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.7);
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --category-competition: #42a5f5;
-            --category-school: #66bb6a;
-            --category-future: #ffca28;
-            --category-personal: #ab47bc;
-            --today-bg: rgba(0, 168, 204, 0.3);
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: "Source Han Sans SC", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-            background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-light) 100%);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+            background: linear-gradient(180deg, #0a0a1a 0%, #0d1a2a 100%);
             min-height: 100vh;
-            color: var(--text-primary);
-            overflow-x: hidden;
+            color: #fff;
+            padding: 1rem;
         }
-
-        .ocean {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-
-        .wave {
-            position: absolute;
-            bottom: 0;
-            left: -50%;
-            width: 200%;
-            height: 100%;
-            background: linear-gradient(180deg, transparent 0%, rgba(0, 168, 204, 0.1) 50%, rgba(0, 168, 204, 0.2) 100%);
-            border-radius: 50% 50% 0 0;
-            animation: wave 15s ease-in-out infinite;
-        }
-
-        .wave:nth-child(2) {
-            bottom: 10%;
-            opacity: 0.6;
-            animation: wave 12s ease-in-out infinite;
-            animation-delay: -3s;
-        }
-
-        .wave:nth-child(3) {
-            bottom: 20%;
-            opacity: 0.4;
-            animation: wave 18s ease-in-out infinite;
-            animation-delay: -6s;
-        }
-
-        @keyframes wave {
-            0%, 100% { transform: translateX(0) translateY(0); }
-            25% { transform: translateX(5%) translateY(-10px); }
-            50% { transform: translateX(0) translateY(-20px); }
-            75% { transform: translateX(-5%) translateY(-10px); }
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 1.5rem;
-        }
-
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-            gap: 1rem;
+            text-align: center;
+            margin-bottom: 1rem;
         }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .back-btn {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.6rem 1.2rem;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            color: var(--text-primary);
+        .header a {
+            color: #00a8cc;
             text-decoration: none;
             font-size: 0.9rem;
-            transition: all 0.3s ease;
         }
-
-        .back-btn:hover {
-            border-color: var(--sea-color);
-            box-shadow: 0 5px 20px rgba(0, 168, 204, 0.3);
-        }
-
-        .page-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-
         .month-nav {
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             gap: 1rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
-
         .nav-btn {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
             border-radius: 50%;
-            color: var(--text-primary);
+            color: #fff;
             font-size: 1.2rem;
             cursor: pointer;
-            transition: all 0.3s ease;
         }
-
-        .nav-btn:hover {
-            border-color: var(--sea-color);
-            box-shadow: 0 5px 15px rgba(0, 168, 204, 0.3);
-        }
-
-        .current-month {
-            font-size: 1.3rem;
-            font-weight: 600;
-            min-width: 150px;
-            text-align: center;
-        }
-
+        .nav-btn:hover { border-color: #00a8cc; }
+        .current-month { font-size: 1.2rem; font-weight: 600; }
         .legend {
             display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
             justify-content: center;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .legend-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-
-        .calendar-container {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 1rem;
-            overflow-x: auto;
-        }
-
-        .main-content {
-            display: flex;
-            gap: 1.5rem;
-        }
-
-        .calendar-wrapper {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .pending-sidebar {
-            width: 250px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 1rem;
-            flex-shrink: 0;
-        }
-
-        .pending-title {
-            font-size: 1rem;
-            font-weight: 600;
+            gap: 1rem;
             margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .pending-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .pending-item {
             font-size: 0.8rem;
-            padding: 0.5rem;
-            background: rgba(255, 202, 40, 0.1);
+        }
+        .legend span { display: flex; align-items: center; gap: 0.3rem; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .calendar {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.5);
+        }
+        .weekdays div:first-child { color: #42a5f5; }
+        .weekdays div:last-child { color: #ab47bc; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+        .day {
+            min-height: 80px;
+            background: rgba(255,255,255,0.03);
             border-radius: 8px;
-            border-left: 3px solid var(--category-future);
-        }
-
-        .pending-item .date {
-            color: var(--text-secondary);
-            margin-bottom: 0.25rem;
-        }
-
-        .pending-item .event-name {
-            color: var(--text-primary);
-        }
-
-        .pending-item .note {
-            color: var(--category-future);
-            font-size: 0.75rem;
-            margin-top: 0.25rem;
-        }
-
-        .pending-empty {
-            color: var(--text-secondary);
+            padding: 6px;
             font-size: 0.85rem;
-            text-align: center;
-            padding: 1rem 0;
         }
-
-        .weekday-header {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-            margin-bottom: 8px;
-        }
-
-        .weekday {
-            text-align: center;
-            padding: 0.5rem;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-
-        .weekday:first-child {
-            color: var(--category-competition);
-        }
-
-        .weekday:last-child {
-            color: var(--category-personal);
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-        }
-
-        .calendar-day {
-            min-height: 100px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            padding: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-        }
-
-        .calendar-day:hover {
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .calendar-day.empty {
-            background: transparent;
-            cursor: default;
-        }
-
-        .calendar-day.today {
-            background: var(--today-bg);
-        }
-
-        .day-number {
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .calendar-day.today .day-number {
-            color: var(--sea-color);
-        }
-
-        .day-events {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            overflow: hidden;
-        }
-
-        .day-event {
+        .day.empty { background: transparent; }
+        .day.today { background: rgba(0,168,204,0.2); }
+        .day.today .num { color: #00a8cc; }
+        .num { font-weight: 600; margin-bottom: 4px; }
+        .event {
             font-size: 0.7rem;
             padding: 2px 6px;
             border-radius: 4px;
+            margin-bottom: 2px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-
-        .day-event.competition { background: rgba(66, 165, 245, 0.3); color: var(--category-competition); }
-        .day-event.school { background: rgba(102, 187, 106, 0.3); color: var(--category-school); }
-        .day-event.future { background: rgba(255, 202, 40, 0.3); color: var(--category-future); }
-        .day-event.personal { background: rgba(171, 71, 188, 0.3); color: var(--category-personal); }
-
-        .more-events {
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-            padding: 2px 6px;
-        }
-
-        @media (max-width: 768px) {
-            .main-content {
-                flex-direction: column-reverse;
-            }
-
-            .pending-sidebar {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .header-left {
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .calendar-day {
-                min-height: 70px;
-                padding: 4px;
-            }
-
-            .day-number {
-                font-size: 0.8rem;
-            }
-
-            .day-event {
-                font-size: 0.6rem;
-            }
-
-            .legend {
-                gap: 0.5rem;
-            }
+        .event.competition { background: rgba(66,165,245,0.3); color: #42a5f5; }
+        .event.school { background: rgba(102,187,106,0.3); color: #66bb6a; }
+        .event.future { background: rgba(255,202,40,0.3); color: #ffca28; }
+        .event.personal { background: rgba(171,71,188,0.3); color: #ab47bc; }
+        @media (max-width: 500px) {
+            .day { min-height: 60px; padding: 4px; }
+            .event { font-size: 0.6rem; }
         }
     </style>
 </head>
 <body>
-    <div class="ocean">
-        <div class="wave"></div>
-        <div class="wave"></div>
-        <div class="wave"></div>
+    <div class="header">
+        <a href="index.html">← 返回</a>
     </div>
 
-    <div class="container">
-        <div class="header">
-            <div class="header-left">
-                <a href="index.html" class="back-btn">
-                    <span>←</span>
-                    <span>返回首頁</span>
-                </a>
-                <h1 class="page-title">📅 人生行事曆</h1>
-            </div>
-        </div>
+    <div class="month-nav">
+        <button class="nav-btn" onclick="changeMonth(-1)">‹</button>
+        <span class="current-month" id="currentMonth"></span>
+        <button class="nav-btn" onclick="changeMonth(1)">›</button>
+    </div>
 
-        <div class="month-nav">
-            <button class="nav-btn" onclick="changeMonth(-1)">‹</button>
-            <span class="current-month" id="currentMonth"></span>
-            <button class="nav-btn" onclick="changeMonth(1)">›</button>
-        </div>
+    <div class="legend">
+        <span><div class="dot" style="background:#42a5f5"></div>比賽</span>
+        <span><div class="dot" style="background:#66bb6a"></div>學校</span>
+        <span><div class="dot" style="background:#ffca28"></div>未來</span>
+        <span><div class="dot" style="background:#ab47bc"></div>個人</span>
+    </div>
 
-        <div class="legend">
-            <div class="legend-item">
-                <div class="legend-dot" style="background: var(--category-competition);"></div>
-                <span>🟦 比賽</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-dot" style="background: var(--category-school);"></div>
-                <span>🟩 學校</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-dot" style="background: var(--category-future);"></div>
-                <span>🟨 未來規劃</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-dot" style="background: var(--category-personal);"></div>
-                <span>🟪 個人</span>
-            </div>
+    <div class="calendar">
+        <div class="weekdays">
+            <div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div><div>日</div>
         </div>
-
-        <div class="main-content">
-            <div class="calendar-wrapper">
-                <div class="calendar-container">
-                    <div class="weekday-header">
-                        <div class="weekday">一</div>
-                        <div class="weekday">二</div>
-                        <div class="weekday">三</div>
-                        <div class="weekday">四</div>
-                        <div class="weekday">五</div>
-                        <div class="weekday">六</div>
-                        <div class="weekday">日</div>
-                    </div>
-                    <div class="calendar-grid" id="calendarGrid"></div>
-                </div>
-            </div>
-            <div class="pending-sidebar">
-                <div class="pending-title">⏳ 待確認事項</div>
-                <div class="pending-list" id="pendingList"></div>
-            </div>
-        </div>
+        <div class="grid" id="grid"></div>
     </div>
 
     <script>
         const events = [
-            { title: '成都旅行', category: 'personal', people: '妈妈', note: '已确认', startDate: '2026-06-13', endDate: '2026-06-18' },
-            { title: '厦门旅行', category: 'personal', people: '室友', note: '已确认', startDate: '2026-06-18', endDate: '2026-06-19' },
-            { title: '系学会聚餐', category: 'school', note: '晚上 18:00 左右', startDate: '2026-06-19', people: '系学会成员', }
-            { title: '支教活动', category: 'competition', people: '待确认', note: '时间待确认', startDate: '2026-07-?', endDate: null }
+            { title: '成都旅行', category: 'personal', start: '2026-06-13', end: '2026-06-18' },
+            { title: '厦门旅行', category: 'personal', start: '2026-06-18', end: '2026-06-19' },
+            { title: '系学会聚餐', category: 'school', start: '2026-06-19', end: '2026-06-19' }
         ];
 
-        let currentDate = new Date();
-        let currentMonth = currentDate.getMonth();
-        let currentYear = currentDate.getFullYear();
+        let current = new Date();
+        let year = current.getFullYear();
+        let month = current.getMonth();
 
-        const monthNames = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+        const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
 
         function changeMonth(delta) {
-            currentMonth += delta;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            } else if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            }
-            renderCalendar();
+            month += delta;
+            if (month > 11) { month = 0; year++; }
+            if (month < 0) { month = 11; year--; }
+            render();
         }
 
-        function renderCalendar() {
-            document.getElementById('currentMonth').textContent = `${currentYear}年 ${monthNames[currentMonth]}`;
-
-            const grid = document.getElementById('calendarGrid');
+        function render() {
+            document.getElementById('currentMonth').textContent = `${year}年 ${monthNames[month]}`;
+            const grid = document.getElementById('grid');
             grid.innerHTML = '';
 
-            const firstDay = new Date(currentYear, currentMonth, 1);
-            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
             const startDay = (firstDay.getDay() + 6) % 7;
             const daysInMonth = lastDay.getDate();
 
             const today = new Date();
-            const isCurrentMonth = today.getFullYear() === currentYear && today.getMonth() === currentMonth;
+            const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
             const todayDate = today.getDate();
 
             for (let i = 0; i < startDay; i++) {
-                const emptyDay = document.createElement('div');
-                emptyDay.className = 'calendar-day empty';
-                grid.appendChild(emptyDay);
+                grid.innerHTML += '<div class="day empty"></div>';
             }
 
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dayEl = document.createElement('div');
-                dayEl.className = 'calendar-day';
-                if (isCurrentMonth && day === todayDate) {
-                    dayEl.classList.add('today');
-                }
-
+            for (let d = 1; d <= daysInMonth; d++) {
+                const isToday = isCurrentMonth && d === todayDate;
                 const dayEvents = events.filter(e => {
-                    if (!e.endDate && e.startDate.includes('?')) return false;
-                    const d = new Date(e.startDate);
-                    return d.getDate() === day && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+                    const s = new Date(e.start);
+                    const e2 = new Date(e.end);
+                    const curr = new Date(year, month, d);
+                    return curr >= s && curr <= e2;
                 });
 
-                dayEl.innerHTML = `
-                    <div class="day-number">${day}</div>
-                    <div class="day-events">
-                        ${dayEvents.slice(0, 3).map(e => `<div class="day-event ${e.category}">${e.title}</div>`).join('')}
-                        ${dayEvents.length > 3 ? `<div class="more-events">+${dayEvents.length - 3} 更多</div>` : ''}
+                let eventsHtml = dayEvents.map(ev =>
+                    `<div class="event ${ev.category}">${ev.title}</div>`
+                ).join('');
+
+                grid.innerHTML += `
+                    <div class="day${isToday ? ' today' : ''}">
+                        <div class="num">${d}</div>
+                        ${eventsHtml}
                     </div>
                 `;
-
-                dayEl.onclick = () => {
-                    const dayEventsList = events.filter(e => {
-                        if (!e.endDate && e.startDate.includes('?')) return false;
-                        const d = new Date(e.startDate);
-                        return d.getDate() === day && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-                    });
-                    if (dayEventsList.length > 0) {
-                        alert(`日期: ${day}\n事件: ${dayEventsList.map(e => e.title).join('\n')}\n\n功能預留中`);
-                    } else {
-                        alert(`日期: ${currentYear}年${currentMonth + 1}月${day}\n\n點擊添加事件 - 功能預留中`);
-                    }
-                };
-
-                grid.appendChild(dayEl);
             }
 
-            const remainingCells = 42 - (startDay + daysInMonth);
-            for (let i = 0; i < remainingCells; i++) {
-                const emptyDay = document.createElement('div');
-                emptyDay.className = 'calendar-day empty';
-                grid.appendChild(emptyDay);
+            const total = startDay + daysInMonth;
+            const remaining = 42 - total;
+            for (let i = 0; i < remaining; i++) {
+                grid.innerHTML += '<div class="day empty"></div>';
             }
-
-            renderPendingList();
         }
 
-        function renderPendingList() {
-            const pendingList = document.getElementById('pendingList');
-            const pendingEvents = events.filter(e => e.startDate.includes('?') || e.note.includes('待确认'));
-
-            if (pendingEvents.length === 0) {
-                pendingList.innerHTML = '<div class="pending-empty">暫無待確認事項</div>';
-                return;
-            }
-
-            pendingList.innerHTML = pendingEvents.map(e => `
-                <div class="pending-item">
-                    <div class="date">${e.startDate}</div>
-                    <div class="event-name">${e.title}</div>
-                    <div class="note">⏳ 待確認</div>
-                </div>
-            `).join('');
-        }
-
-        renderCalendar();
+        render();
     </script>
 </body>
 </html>
