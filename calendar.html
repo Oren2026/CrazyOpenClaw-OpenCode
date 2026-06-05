@@ -16,10 +16,16 @@
         .container {
             display: flex;
             gap: 1.5rem;
-            max-width: 900px;
+            max-width: 1100px;
             margin: 0 auto;
+            align-items: stretch;
         }
-        .main { flex: 1; }
+        .main {
+            flex: 7;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
         .header {
             text-align: center;
             margin-bottom: 1rem;
@@ -118,14 +124,13 @@
         .event.future { background: rgba(255,202,40,0.25); color: #ffd54f; border-left: 3px solid #ffca28; }
         .event.personal { background: rgba(171,71,188,0.25); color: #ba68c8; border-left: 3px solid #ab47bc; }
         .sidebar {
-            width: 220px;
+            flex: 3;
             background: rgba(255,255,255,0.05);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 20px;
             padding: 1.2rem;
             box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-            height: fit-content;
         }
         .sidebar h3 {
             font-size: 0.95rem;
@@ -145,9 +150,9 @@
         .pending-item .date { color: #ffca28; font-weight: 600; }
         .pending-item .title { color: #fff; margin: 4px 0; }
         .pending-item .note { color: rgba(255,255,255,0.5); font-size: 0.75rem; }
-        @media (max-width: 700px) {
+        @media (max-width: 768px) {
             .container { flex-direction: column; }
-            .sidebar { width: 100%; }
+            .main, .sidebar { flex: none; width: 100%; }
             .day { min-height: 65px; padding: 5px; }
             .event { font-size: 0.6rem; }
         }
