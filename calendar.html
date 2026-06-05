@@ -13,6 +13,13 @@
             color: #fff;
             padding: 1rem;
         }
+        .container {
+            display: flex;
+            gap: 1.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .main { flex: 1; }
         .header {
             text-align: center;
             margin-bottom: 1rem;
@@ -30,21 +37,23 @@
             margin-bottom: 1rem;
         }
         .nav-btn {
-            width: 36px;
-            height: 36px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
             border-radius: 50%;
             color: #fff;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s;
         }
-        .nav-btn:hover { border-color: #00a8cc; }
-        .current-month { font-size: 1.2rem; font-weight: 600; }
+        .nav-btn:hover { border-color: #00a8cc; background: rgba(0,168,204,0.2); }
+        .current-month { font-size: 1.4rem; font-weight: 700; letter-spacing: 0.05em; }
         .legend {
             display: flex;
             justify-content: center;
-            gap: 1rem;
+            gap: 1.2rem;
             margin-bottom: 1rem;
             font-size: 0.8rem;
         }
@@ -52,11 +61,11 @@
         .dot { width: 10px; height: 10px; border-radius: 50%; }
         .calendar {
             background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
             border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px;
-            padding: 1rem;
-            max-width: 600px;
-            margin: 0 auto;
+            border-radius: 20px;
+            padding: 1.2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         }
         .weekdays {
             display: grid;
@@ -64,6 +73,7 @@
             text-align: center;
             margin-bottom: 0.5rem;
             font-size: 0.8rem;
+            font-weight: 600;
             color: rgba(255,255,255,0.5);
         }
         .weekdays div:first-child { color: #42a5f5; }
@@ -71,34 +81,74 @@
         .grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
+            gap: 8px;
         }
         .day {
-            min-height: 80px;
+            min-height: 85px;
             background: rgba(255,255,255,0.03);
-            border-radius: 8px;
-            padding: 6px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 8px;
             font-size: 0.85rem;
+            backdrop-filter: blur(10px);
+            transition: background 0.2s;
         }
-        .day.empty { background: transparent; }
-        .day.today { background: rgba(0,168,204,0.2); }
-        .day.today .num { color: #00a8cc; }
+        .day:hover { background: rgba(255,255,255,0.06); }
+        .day.empty { background: transparent; border: none; }
+        .day.today {
+            background: rgba(0,168,204,0.15);
+            border-color: #00a8cc;
+            box-shadow: 0 0 20px rgba(0,168,204,0.3);
+        }
+        .day.today .num { color: #00a8cc; font-weight: 700; }
+        .day.weekend { opacity: 0.7; }
         .num { font-weight: 600; margin-bottom: 4px; }
         .event {
             font-size: 0.7rem;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-bottom: 2px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            margin-bottom: 3px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            font-weight: 500;
         }
-        .event.competition { background: rgba(66,165,245,0.3); color: #42a5f5; }
-        .event.school { background: rgba(102,187,106,0.3); color: #66bb6a; }
-        .event.future { background: rgba(255,202,40,0.3); color: #ffca28; }
-        .event.personal { background: rgba(171,71,188,0.3); color: #ab47bc; }
-        @media (max-width: 500px) {
-            .day { min-height: 60px; padding: 4px; }
+        .event.competition { background: rgba(66,165,245,0.25); color: #64b5f6; border-left: 3px solid #42a5f5; }
+        .event.school { background: rgba(102,187,106,0.25); color: #81c784; border-left: 3px solid #66bb6a; }
+        .event.future { background: rgba(255,202,40,0.25); color: #ffd54f; border-left: 3px solid #ffca28; }
+        .event.personal { background: rgba(171,71,188,0.25); color: #ba68c8; border-left: 3px solid #ab47bc; }
+        .sidebar {
+            width: 220px;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 1.2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            height: fit-content;
+        }
+        .sidebar h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #ffca28;
+            text-align: center;
+        }
+        .pending-item {
+            background: rgba(255,202,40,0.1);
+            border: 1px solid rgba(255,202,40,0.2);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+        }
+        .pending-item .date { color: #ffca28; font-weight: 600; }
+        .pending-item .title { color: #fff; margin: 4px 0; }
+        .pending-item .note { color: rgba(255,255,255,0.5); font-size: 0.75rem; }
+        @media (max-width: 700px) {
+            .container { flex-direction: column; }
+            .sidebar { width: 100%; }
+            .day { min-height: 65px; padding: 5px; }
             .event { font-size: 0.6rem; }
         }
     </style>
@@ -108,31 +158,41 @@
         <a href="index.html">← 返回</a>
     </div>
 
-    <div class="month-nav">
-        <button class="nav-btn" onclick="changeMonth(-1)">‹</button>
-        <span class="current-month" id="currentMonth"></span>
-        <button class="nav-btn" onclick="changeMonth(1)">›</button>
-    </div>
+    <div class="container">
+        <div class="main">
+            <div class="month-nav">
+                <button class="nav-btn" onclick="changeMonth(-1)">‹</button>
+                <span class="current-month" id="currentMonth"></span>
+                <button class="nav-btn" onclick="changeMonth(1)">›</button>
+            </div>
 
-    <div class="legend">
-        <span><div class="dot" style="background:#42a5f5"></div>比賽</span>
-        <span><div class="dot" style="background:#66bb6a"></div>學校</span>
-        <span><div class="dot" style="background:#ffca28"></div>未來</span>
-        <span><div class="dot" style="background:#ab47bc"></div>個人</span>
-    </div>
+            <div class="legend">
+                <span><div class="dot" style="background:#42a5f5"></div>比賽</span>
+                <span><div class="dot" style="background:#66bb6a"></div>學校</span>
+                <span><div class="dot" style="background:#ffca28"></div>未來</span>
+                <span><div class="dot" style="background:#ab47bc"></div>個人</span>
+            </div>
 
-    <div class="calendar">
-        <div class="weekdays">
-            <div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div><div>日</div>
+            <div class="calendar">
+                <div class="weekdays">
+                    <div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div><div>日</div>
+                </div>
+                <div class="grid" id="grid"></div>
+            </div>
         </div>
-        <div class="grid" id="grid"></div>
+
+        <div class="sidebar">
+            <h3>✦ 待確認事項</h3>
+            <div id="pendingList"></div>
+        </div>
     </div>
 
     <script>
         const events = [
-            { title: '成都旅行', category: 'personal', start: '2026-06-13', end: '2026-06-18' },
-            { title: '厦门旅行', category: 'personal', start: '2026-06-18', end: '2026-06-19' },
-            { title: '系学会聚餐', category: 'school', start: '2026-06-19', end: '2026-06-19' }
+            { title: '成都旅行', category: 'personal', start: '2026-06-13', end: '2026-06-18', note: '妈' },
+            { title: '厦门旅行', category: 'personal', start: '2026-06-18', end: '2026-06-19', note: '室友' },
+            { title: '系学会聚餐', category: 'school', start: '2026-06-19', end: '2026-06-19', note: '晚上6点' },
+            { title: '支教活动', category: 'competition', start: '2027-07-?', end: null, note: '时间待确认' }
         ];
 
         let current = new Date();
@@ -167,12 +227,14 @@
             }
 
             for (let d = 1; d <= daysInMonth; d++) {
+                const dayOfWeek = (startDay + d - 1) % 7;
+                const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
                 const isToday = isCurrentMonth && d === todayDate;
                 const dayEvents = events.filter(e => {
-                    const s = new Date(e.start);
-                    const e2 = new Date(e.end);
+                    const s = new Date(e.start.replace(/\?/g, '01'));
+                    const eEnd = e.end ? new Date(e.end.replace(/\?/g, '01')) : s;
                     const curr = new Date(year, month, d);
-                    return curr >= s && curr <= e2;
+                    return curr >= s && curr <= eEnd;
                 });
 
                 let eventsHtml = dayEvents.map(ev =>
@@ -180,7 +242,7 @@
                 ).join('');
 
                 grid.innerHTML += `
-                    <div class="day${isToday ? ' today' : ''}">
+                    <div class="day${isToday ? ' today' : ''}${isWeekend ? ' weekend' : ''}">
                         <div class="num">${d}</div>
                         ${eventsHtml}
                     </div>
@@ -192,6 +254,33 @@
             for (let i = 0; i < remaining; i++) {
                 grid.innerHTML += '<div class="day empty"></div>';
             }
+
+            renderPending();
+        }
+
+        function renderPending() {
+            const pending = events.filter(e => {
+                return (e.note && e.note.includes('待確認')) ||
+                       (e.note && e.note.includes('待确认')) ||
+                       (e.start && e.start.includes('?'));
+            });
+
+            const list = document.getElementById('pendingList');
+            if (pending.length === 0) {
+                list.innerHTML = '<div style="color:rgba(255,255,255,0.4);text-align:center;font-size:0.8rem;">暫無待確認事項</div>';
+                return;
+            }
+
+            list.innerHTML = pending.map(ev => {
+                const dateStr = ev.start.includes('?') ? ev.start : ev.start;
+                return `
+                    <div class="pending-item">
+                        <div class="date">${dateStr}</div>
+                        <div class="title">${ev.title}</div>
+                        <div class="note">${ev.note || ''}</div>
+                    </div>
+                `;
+            }).join('');
         }
 
         render();
